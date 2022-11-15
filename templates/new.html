@@ -1,5 +1,7 @@
 <!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
+{% load custom_filters %}!
+{% load custom_tags %}
 
 <!-- Название у нас будет New -->
 {% block title %}New{% endblock title %}
@@ -10,4 +12,5 @@
 <h5>Опубликовано: {{ new.time_create|date:'d.M.Y' }}</h5>
 <hr>
 <p>{{ new.text }}</p>
+<p>{% current_time %}</p>
 {% endblock content %}
