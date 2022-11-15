@@ -54,7 +54,7 @@ class Post(models.Model):
         return self.text[:125] + "..."
 
     def __str__(self):
-        return self.caption[:125] + '.... | ' + self.preview()
+        return self.caption[:125] + '.... | ' + self.preview
 
     def like(self):
         self.rating += 1
