@@ -7,5 +7,25 @@
 <!-- В контенте на странице мы выводим все товары -->
 {% block content %}
 <h1>Все новости</h1>
-{{ news }}
+<h4>Всего: {{ news|length }}</h4>
+   <hr>
+   {% if news %}
+       <table>
+           <tr>
+               <td>Заголовок</td>
+               <td>Дата публикации</td>
+               <td>Текст</td>
+           </tr>
+           {% for new in news %}
+           <tr>
+               <td><a href="/news/{{ new.id }}">{{ new.caption }}</a></td>
+               <td>{{ new.time_create|date:'d.M.Y' }}</td>
+               <td>{{ new.text|truncatewords:20 }}</td>
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>Новостей нет!</h2>
+   {% endif %}
 {% endblock content %}
