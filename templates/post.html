@@ -6,11 +6,11 @@
 <!-- Название у нас будет New -->
 {% block title %}New{% endblock title %}
 
-<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+<!-- В контенте на странице мы выводим сам пост, идентификатор которого был передан в url -->
 {% block content %}
-<h1>{{ new.caption }}</h1>
+<h1>{{ new.caption|censor }}</h1>
 <h5>Опубликовано: {{ new.time_create|date:'d.M.Y' }}</h5>
 <hr>
-<p>{{ new.text }}</p>
+<p>{{ new.text|censor }}</p>
 <p>{% current_time %}</p>
 {% endblock content %}

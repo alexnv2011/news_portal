@@ -3,29 +3,52 @@ from django.shortcuts import render
 # Create your views here.
 # Импортируем класс, который говорит нам о том,
 # что в этом представлении мы будем выводить список объектов из БД
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
+from .forms import PostForm
+from .filters import PostFilter
 
 
-class NewsList(ListView):
-    # Указываем модель, объекты которой мы будем выводить
+class PostList(ListView):
     model = Post
-    # Поле, которое будет использоваться для сортировки объектов
     ordering = '-time_create'
-    # Указываем имя шаблона, в котором будут все инструкции о том,
-    # как именно пользователю должны быть показаны наши объекты
     template_name = 'news.html'
-    # Это имя списка, в котором будут лежать все объекты.
-    # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'news'
+    paginate_by = 2
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
 
     #можно
     #queryset = Product.objects.filter( price__lt=300) # цена < 300
 
-class NewDetail(DetailView):
-    # Модель всё та же, но мы хотим получать информацию по отдельному товару
+class PostDetail(DetailView):
     model = Post
-    # Используем другой шаблон — product.html
-    template_name = 'new.html'
-    # Название объекта, в котором будет выбранный пользователем продукт
+    template_name = 'post.html'
     context_object_name = 'new'
+
+
+class PostCreate(CreateView):
+    form_class = PostForm
+    model = Post
+    template_name = 'post_create.html'
+
+
+class PostUpdate(UpdateView):
+    form_class = PostForm
+    model = Post
+    template_name = 'post_edit.html'
+
+# Представление, удаляющее пост.
+class PostDelete(DeleteView):
+    model = Post
+    template_name = 'post_delete.html'
+    success_url = reverse_lazy('news')
