@@ -3,16 +3,18 @@
 {% load custom_filters %}!
 {% load custom_tags %}
 
-<!-- Название у нас будет products -->
+<!-- Название у нас  -->
 {% block title %}News{% endblock title %}
 
-<!-- В контенте на странице мы выводим все товары -->
+<!-- В контенте на странице мы выводим все -->
+
 {% block content %}
-<h1>Все новости</h1>
-   <form action="" method="get">
-       {{ filterset.form.as_p }}
-       <input type="submit" value="Найти" />
-   </form>
+    {% if post_type == 'news' %}
+        <h1>Все новости</h1>
+    {% else %}
+        <h1>Все статьи</h1>
+    {% endif %}
+
 <h4>Всего: {{ news|length }}</h4>
 
    <hr>
@@ -25,7 +27,8 @@
            </tr>
            {% for new in news %}
            <tr>
-               <td><a href="/news/{{ new.id }}">{{ new.caption|censor }}</a></td>
+               <td><a href="/{% if post_type == 'news' %}news{% else %}articles{% endif %}/{{ new.id }}">
+                   {{ new.caption|censor }}</a></td>
                <td>{{ new.time_create|date:'d.M.Y' }}</td>
                <td>{{ new.text|censor|truncatewords:20 }}</td>
            </tr>
@@ -33,7 +36,7 @@
 
        </table>
    {% else %}
-       <h2>Новостей нет!</h2>
+       <h2>Ничего нет!</h2>
    {% endif %}
 
 

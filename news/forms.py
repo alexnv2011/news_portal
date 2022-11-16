@@ -12,8 +12,7 @@ class PostForm(forms.ModelForm):
             'category',
             'caption',
             'text',
-            'author',
-            'post_type'
+            'author'
         ]
 
     def clean(self):
@@ -26,8 +25,6 @@ class PostForm(forms.ModelForm):
 
         text = cleaned_data.get("text")
         if caption == text:
-            raise ValidationError(
-                "Заголовок не должно быть идентичен тексту."
-            )
+            raise ValidationError("Заголовок не должно быть идентичен тексту.")
 
         return cleaned_data
