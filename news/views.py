@@ -48,6 +48,7 @@ class NewsCreate(CreateView):
     model = Post
     template_name = 'post_create.html'
     extra_context = {'post_type': 'news'}
+    success_url = reverse_lazy('news')
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type = news
@@ -58,13 +59,15 @@ class NewsEdit(UpdateView):
     model = Post
     template_name = 'post_edit.html'
     extra_context = {'post_type': 'news'}
+    success_url = reverse_lazy('news')
+
 
 # Представление, удаляющее пост.
 class NewsDelete(DeleteView):
     model = Post
     template_name = 'post_delete.html'
-    success_url = reverse_lazy('news')
     extra_context = {'post_type': 'news'}
+    success_url = reverse_lazy('news')
 
 
 
@@ -86,6 +89,7 @@ class ArticleCreate(CreateView):
     form_class = PostForm
     model = Post
     template_name = 'post_create.html'
+    success_url = reverse_lazy('articles')
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type = article
@@ -96,6 +100,7 @@ class ArticleEdit(UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
+    success_url = reverse_lazy('articles')
 
 
 # Представление, удаляющее пост.

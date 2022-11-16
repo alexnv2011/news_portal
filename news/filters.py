@@ -5,9 +5,8 @@ from .models import Post
 # FilterSet, который мы наследуем,
 # должен чем-то напомнить знакомые вам Django дженерики.
 class PostFilter(FilterSet):
+   # release_year__gt = django_filters.NumberFilter(field_name='release_date', lookup_expr='year__gt')
    class Meta:
-       # В Meta классе мы должны указать Django модель,
-       # в которой будем фильтровать записи.
        model = Post
        # В fields мы описываем по каким полям модели
        # будет производиться фильтрация.
@@ -15,6 +14,7 @@ class PostFilter(FilterSet):
            # поиск по названию
            'caption': ['icontains'],
            'text': ['icontains'],
+           'time_create': ['gt'],
            # # количество товаров должно быть больше или равно
            # 'quantity': ['gt'],
            # 'price': [
