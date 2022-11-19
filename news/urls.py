@@ -5,7 +5,7 @@ from .views import NewsList, NewsDetail, NewsCreate, NewsEdit, NewsDelete,\
 
 
 urlpatterns = [
-   path('news/',                 NewsList.as_view(), name='news'),
+   path('',                 NewsList.as_view(), name='news'),
    path('search/',               NewsSearch.as_view()),
    path('news/<int:pk>',         NewsDetail.as_view()),
    path('news/create/',          NewsCreate.as_view(),   name='post_create'),

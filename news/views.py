@@ -8,6 +8,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post, news, article
 from .forms import PostForm
 from .filters import PostFilter
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class NewsList(ListView):
@@ -43,7 +44,8 @@ class NewsDetail(DetailView):
     context_object_name = 'new'
     extra_context = {'post_type': 'news'}
 
-class NewsCreate(CreateView):
+
+class NewsCreate(LoginRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'post_create.html'
@@ -54,7 +56,8 @@ class NewsCreate(CreateView):
         post.post_type = news
         return super().form_valid(form)
 
-class NewsEdit(UpdateView):
+
+class NewsEdit(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -63,7 +66,7 @@ class NewsEdit(UpdateView):
 
 
 # Представление, удаляющее пост.
-class NewsDelete(DeleteView):
+class NewsDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     extra_context = {'post_type': 'news'}
@@ -79,13 +82,14 @@ class ArticleList(ListView):
     paginate_by = 10
     queryset = Post.objects.filter(post_type=article)   # фильтр - статьи
 
+
 class ArticleDetail(DetailView):
     model = Post
     template_name = 'post_detail.html'
     context_object_name = 'new'
 
 
-class ArticleCreate(CreateView):
+class ArticleCreate(LoginRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'post_create.html'
@@ -96,7 +100,7 @@ class ArticleCreate(CreateView):
         return super().form_valid(form)
 
 
-class ArticleEdit(UpdateView):
+class ArticleEdit(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -104,7 +108,7 @@ class ArticleEdit(UpdateView):
 
 
 # Представление, удаляющее пост.
-class ArticleDelete(DeleteView):
+class ArticleDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('articles')
