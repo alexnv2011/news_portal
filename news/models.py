@@ -14,14 +14,23 @@ TYPES = [
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
-
+    subscribers = models.ManyToManyField(User, through='CategorySubscriber')
     def __str__(self):
         return self.name
+
+
+class CategorySubscriber(models.Model):
+    subscriber = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
 class Author(models.Model):
     rating = models.IntegerField(default=0)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    @property
+    def count_today(self):
+        return 2
 
     def __str__(self):
         return self.user.username

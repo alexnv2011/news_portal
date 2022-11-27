@@ -1,14 +1,31 @@
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
+from django.core.mail import EmailMultiAlternatives  # импортируем класс для создание объекта письма с html
+from django.template.loader import render_to_string  # импортируем функцию, которая срендерит наш html в текст
 # Create your views here.
 # Импортируем класс, который говорит нам о том,
 # что в этом представлении мы будем выводить список объектов из БД
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, news, article
+from .models import Post, news, article, Author, Category
 from .forms import PostForm
 from .filters import PostFilter
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from datetime import timedelta, datetime
+
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def subscribe_me(request):  # add subscriber if not exists for category
+    user = request.user
+    cat_id = request.GET.get('cat_id', False)
+    if cat_id:
+        current_category = Category.objects.get(id=cat_id)
+        if not current_category.subscribers.filter(id=user.id).exists():
+            current_category.subscribers.add(user)
+    return redirect('/')
+
 
 
 class NewsList(ListView):
@@ -45,19 +62,75 @@ class NewsDetail(DetailView):
     extra_context = {'post_type': 'news'}
 
 
-class NewsCreate(LoginRequiredMixin, CreateView):
+class NewsCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_post')
     form_class = PostForm
     model = Post
     template_name = 'post_create.html'
     extra_context = {'post_type': 'news'}
     success_url = reverse_lazy('news')
+
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type = news
-        return super().form_valid(form)
+        author = post.author
+        end = datetime.now() + timedelta(days=-1)
+        posts = author.post_set.filter(time_create__gt=end)
+
+        if len(posts) >= 3:
+            raise Exception('Запрещено более 3 постов в день!')
+        else:
+            return super().form_valid(form)
+
+    # НЕ НУЖНО т.к. есть Сигналы
+    # def post(self, request, *args, **kwargs):
+    #     current_user = request.user
+    #     current_author = Author.objects.get(user__id=current_user.id)
+    #
+    #     if not current_author:
+    #         raise ValueError("User not in Authors")
+    #
+    #     post = Post(
+    #         text=request.POST['text'],
+    #         caption=request.POST['caption'],
+    #         author=current_author,
+    #     )
+    #
+    #     categories = request.POST.getlist('category')
+    #
+    #     post.save()
+    #
+    #     for cat in categories:
+    #         curr_cat = Category.objects.get(id=cat)
+    #         post.category.add(curr_cat)
 
 
-class NewsEdit(LoginRequiredMixin, UpdateView):
+        #   Отправляем простое письмо
+        # send_mail(
+        #     subject=f'Новая новость!',
+        #     message='Краткое содержание ' + post.text,  # сообщение с кратким описанием проблемы
+        #     from_email='info@vikingservice72.ru',  # здесь указываете почту, с которой будете отправлять
+        #     recipient_list=['alexnv2011@gmail.com']  # здесь список получателей.
+        # )
+
+        # Отправка в HTML формате - не нужно т.к. есть Сигналы
+        # получаем наш html
+        # html_content = render_to_string('mail_news.html', {'post': post})
+        # # в конструкторе уже знакомые нам параметры, да? Называются правда немного по-другому, но суть та же.
+        # msg = EmailMultiAlternatives(
+        #     subject=f'Привет, {post.author.user.username}! Новость на сайте!',
+        #     body=post.text,  # это то же, что и message
+        #     from_email='info@vikingservice72.ru',
+        #     to=['alexnv2011@gmail.com'],  # это то же, что и recipients_list
+        # )
+        # msg.attach_alternative(html_content, "text/html")  # добавляем html
+        # msg.send()  # отсылаем
+
+        # return redirect('/')
+
+
+class NewsEdit(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_post')
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -66,7 +139,8 @@ class NewsEdit(LoginRequiredMixin, UpdateView):
 
 
 # Представление, удаляющее пост.
-class NewsDelete(LoginRequiredMixin, DeleteView):
+class NewsDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_post')
     model = Post
     template_name = 'post_delete.html'
     extra_context = {'post_type': 'news'}
@@ -89,7 +163,8 @@ class ArticleDetail(DetailView):
     context_object_name = 'new'
 
 
-class ArticleCreate(LoginRequiredMixin, CreateView):
+class ArticleCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_post')
     form_class = PostForm
     model = Post
     template_name = 'post_create.html'
@@ -97,10 +172,48 @@ class ArticleCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type = article
-        return super().form_valid(form)
+        author = post.author
+        end = datetime.now() + timedelta(days=-1)
+        posts = author.post_set.filter(time_create__gt=end)
+
+        if len(posts) >= 3:
+            raise Exception('Запрещено более 3 постов в день!')
+        else:
+            return super().form_valid(form)
 
 
-class ArticleEdit(LoginRequiredMixin, UpdateView):
+    # def post(self, request, *args, **kwargs):
+    #     current_user = request.user
+    #     current_author = Author.objects.filter(user__id=current_user.id)[0]
+    #
+    #     if not current_author:
+    #         raise ValueError("User not in Authors")
+    #     post = Post(
+    #         text=request.POST['text'],
+    #         caption=request.POST['caption'],
+    #         author=current_author,
+    #         post_type=article,
+    #     )
+    #     post.save()
+    #
+    #     # отправляем письмо - получаем наш html
+    #     html_content = render_to_string(
+    #         'mail_news.html',  {'post': post, })
+    #     msg = EmailMultiAlternatives(
+    #         subject=f'Привет, {post.author.user.username}! Статья на сайте!',
+    #         body=post.text,  # это то же, что и message
+    #         from_email='info@vikingservice72.ru',
+    #         to=['alexnv2011@gmail.com'],  # это то же, что и recipients_list
+    #     )
+    #     msg.attach_alternative(html_content, "text/html")  # добавляем html
+    #     msg.send()  # отсылаем
+    #     return redirect('/articles')
+
+
+
+
+class ArticleEdit(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_post')
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -108,7 +221,8 @@ class ArticleEdit(LoginRequiredMixin, UpdateView):
 
 
 # Представление, удаляющее пост.
-class ArticleDelete(LoginRequiredMixin, DeleteView):
+class ArticleDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_post')
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('articles')

@@ -9,7 +9,21 @@
 <!-- В контенте на странице мы выводим сам пост, идентификатор которого был передан в url -->
 {% block content %}
 <h1>{{ new.caption|censor }}</h1>
-<h5>Опубликовано: {{ new.time_create|date:'d.M.Y' }}</h5>
+
+<p>
+       <table>
+           {% for category in new.category.all %}
+           <tr>
+               <td>Категория: </td>
+               <td> {{  category.name  }} </td>
+               <td><a href="/subscribe/?cat_id={{ category.id }}"> Подписаться </a></td>
+           </tr>
+           {% endfor %}
+       </table>
+</p>
+
+
+<h6>Опубликовано: {{ new.time_create|date:'d.M.Y' }}</h6>
 <hr>
 <p>{{ new.text|censor }}</p>
 <p>{% current_time %}</p>
