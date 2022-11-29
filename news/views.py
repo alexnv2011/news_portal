@@ -12,6 +12,7 @@ from .filters import PostFilter
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from datetime import timedelta, datetime
+from .tasks import send_notify_email
 
 
 from django.contrib.auth.decorators import login_required
@@ -34,6 +35,7 @@ class NewsList(ListView):
     template_name = 'posts.html'
     context_object_name = 'news'
     paginate_by = 10
+    #printer.apply_async([5], countdown=5)
     queryset = Post.objects.filter(post_type=news)   # фильтр - новости
     extra_context = {'post_type': 'news'}
 
@@ -62,6 +64,7 @@ class NewsDetail(DetailView):
     extra_context = {'post_type': 'news'}
 
 
+
 class NewsCreate(PermissionRequiredMixin, CreateView):
     permission_required = ('news.add_post')
     form_class = PostForm
@@ -77,10 +80,14 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
         end = datetime.now() + timedelta(days=-1)
         posts = author.post_set.filter(time_create__gt=end)
 
-        if len(posts) >= 3:
+        if len(posts) >= 30:
             raise Exception('Запрещено более 3 постов в день!')
         else:
-            return super().form_valid(form)
+            super().form_valid(form)
+            #post.save()
+            send_notify_email.delay(post.id)    # Уведомление подписчикам о новом посте
+            return redirect('/')
+
 
     # НЕ НУЖНО т.к. есть Сигналы
     # def post(self, request, *args, **kwargs):

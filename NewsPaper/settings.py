@@ -182,4 +182,12 @@ EMAIL_HOST = 'mail.vikingservice72.ru'  # адрес сервера Яндекс
 EMAIL_PORT = 465  # порт smtp сервера тоже одинаковый
 EMAIL_HOST_USER = 'info@vikingservice72.ru'  # ваше имя пользователя, например, если ваша почта user@yandex.ru, то сюда надо писать user, иными словами, это всё то что идёт до собаки
 EMAIL_HOST_PASSWORD = 'jbqwdyfT123d'  # пароль от почты
-EMAIL_USE_SSL = True  # Яндекс использует ssl, подробнее о том, что это, почитайте в дополнительных источниках, но включать его здесь обязательно
+EMAIL_USE_SSL = True  # Яндекс использует ssl
+
+
+CELERY_BROKER_URL = 'redis://192.168.163.130:6379'
+CELERY_RESULT_BACKEND = 'redis://192.168.163.130:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
