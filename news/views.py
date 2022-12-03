@@ -13,6 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from datetime import timedelta, datetime
 from .tasks import send_notify_email
+from django.core.cache import cache     # импортируем наш кэш
 
 
 from django.contrib.auth.decorators import login_required
@@ -63,6 +64,15 @@ class NewsDetail(DetailView):
     context_object_name = 'new'
     extra_context = {'post_type': 'news'}
 
+    def get_object(self, *args, **kwargs):  # переопределяем метод получения объекта, как ни странно
+        obj = cache.get(f'news-{self.kwargs["pk"]}', None)  # кэш очень похож на словарь, и метод get действует так же.
+        # Он забирает значение по ключу, если его нет, то забирает None.
+
+        # если объекта нет в кэше, то получаем его и записываем в кэш
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'news-{self.kwargs["pk"]}', obj)
+        return obj
 
 
 class NewsCreate(PermissionRequiredMixin, CreateView):
@@ -80,7 +90,7 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
         end = datetime.now() + timedelta(days=-1)
         posts = author.post_set.filter(time_create__gt=end)
 
-        if len(posts) >= 30:
+        if len(posts) >= 3:
             raise Exception('Запрещено более 3 постов в день!')
         else:
             super().form_valid(form)
@@ -169,6 +179,16 @@ class ArticleDetail(DetailView):
     template_name = 'post_detail.html'
     context_object_name = 'new'
 
+    def get_object(self, *args, **kwargs):  # переопределяем метод получения объекта, как ни странно
+        obj = cache.get(f'articles-{self.kwargs["pk"]}', None)  # кэш очень похож на словарь, и метод get действует так же.
+        # Он забирает значение по ключу, если его нет, то забирает None.
+
+        # если объекта нет в кэше, то получаем его и записываем в кэш
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'articles-{self.kwargs["pk"]}', obj)
+        return obj
+
 
 class ArticleCreate(PermissionRequiredMixin, CreateView):
     permission_required = ('news.add_post')
@@ -186,8 +206,9 @@ class ArticleCreate(PermissionRequiredMixin, CreateView):
         if len(posts) >= 3:
             raise Exception('Запрещено более 3 постов в день!')
         else:
-            return super().form_valid(form)
-
+            super().form_valid(form)
+            send_notify_email.delay(post.id)    # Уведомление подписчикам о новом посте
+            return redirect('/')
 
     # def post(self, request, *args, **kwargs):
     #     current_user = request.user

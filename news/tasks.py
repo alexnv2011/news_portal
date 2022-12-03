@@ -35,3 +35,6 @@ def send_notify_email(post_id):
         from_email='info@vikingservice72.ru',  # здесь указываете почту, с которой будете отправлять
         recipient_list=recipient_list  # здесь список получателей.
     )
+
+
+

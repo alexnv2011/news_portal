@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.core.cache import cache
+
 
 news = 'NE'
 article = 'AR'
@@ -77,6 +79,12 @@ class Post(models.Model):
         self.rating -= 1
         self.save()
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)   # сначала вызываем метод родителя, чтобы объект сохранился
+        if self.post_type == news:
+            cache.delete(f'news-{self.pk}')     # затем удаляем его из кэша, чтобы сбросить его
+        else:
+            cache.delete(f'articles-{self.pk}')  # затем удаляем его из кэша, чтобы сбросить его
 
 class Comment(models.Model):
     text = models.TextField()
