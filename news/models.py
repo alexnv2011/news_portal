@@ -17,6 +17,11 @@ TYPES = [
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     subscribers = models.ManyToManyField(User, through='CategorySubscriber')
+
+    @property
+    def count_posts(self):
+        return len(self.post_set.all())
+
     def __str__(self):
         return self.name
 
@@ -34,6 +39,14 @@ class Author(models.Model):
     def count_today(self):
         return 2
 
+    @property
+    def posts(self):
+        return len(self.post_set.all())
+
+    @property
+    def comments(self):
+        return len(self.user.comment_set.all())
+
     def __str__(self):
         return self.user.username
 
@@ -50,6 +63,7 @@ class Author(models.Model):
          # суммарный рейтинг комментариев к постам автора
         for i in Comment.objects.filter(post__author__id=self.id):
             self.rating += i.rating
+        self.save()
 
 
 class Post(models.Model):
