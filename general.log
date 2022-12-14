@@ -1,0 +1,64 @@
+2022-12-14 20:45:18,614: INFO: basehttp; "GET /news/create/ HTTP/1.1" 302 0
+2022-12-14 20:45:18,626: INFO: basehttp; "GET /accounts/login/?next=/news/create/ HTTP/1.1" 200 4057
+2022-12-14 20:45:22,577: INFO: basehttp; "GET /articles/ HTTP/1.1" 200 5588
+2022-12-14 20:45:24,379: INFO: basehttp; "GET /articles/29 HTTP/1.1" 200 3615
+2022-12-14 20:45:26,824: WARNING: log; Not Found: /articles/29swsw
+2022-12-14 20:45:26,825: WARNING: basehttp; "GET /articles/29swsw HTTP/1.1" 404 4693
+2022-12-14 20:48:05,566: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
+2022-12-14 20:48:06,135: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:48:21,805: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
+2022-12-14 20:48:22,475: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:48:34,590: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
+2022-12-14 20:48:35,439: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:49:13,558: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
+2022-12-14 20:49:14,262: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:49:18,164: INFO: basehttp; "GET /articles/ HTTP/1.1" 200 5588
+2022-12-14 20:49:19,829: INFO: basehttp; "GET /news/create/ HTTP/1.1" 302 0
+2022-12-14 20:49:19,849: INFO: basehttp; "GET /accounts/login/?next=/news/create/ HTTP/1.1" 200 4057
+2022-12-14 20:49:21,447: INFO: basehttp; "GET /articles/create/ HTTP/1.1" 302 0
+2022-12-14 20:49:21,454: INFO: basehttp; "GET /accounts/login/?next=/articles/create/ HTTP/1.1" 200 4069
+2022-12-14 20:49:22,593: INFO: basehttp; "GET / HTTP/1.1" 200 5198
+2022-12-14 20:49:24,074: INFO: basehttp; "GET /news/82 HTTP/1.1" 200 2903
+2022-12-14 20:49:29,955: WARNING: log; Not Found: /news/82sfsd
+2022-12-14 20:49:29,956: WARNING: basehttp; "GET /news/82sfsd HTTP/1.1" 404 4681
+2022-12-14 20:51:01,910: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
+2022-12-14 20:51:02,438: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:51:37,707: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
+2022-12-14 20:51:38,402: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:51:51,111: INFO: basehttp; "GET /articles/ HTTP/1.1" 200 5588
+2022-12-14 20:51:51,898: INFO: basehttp; "GET / HTTP/1.1" 200 5198
+2022-12-14 20:51:55,193: INFO: basehttp; "GET /news/82 HTTP/1.1" 200 2903
+2022-12-14 20:51:58,314: WARNING: log; Not Found: /news/8243
+2022-12-14 20:51:58,315: WARNING: basehttp; "GET /news/8243 HTTP/1.1" 404 2850
+2022-12-14 20:53:34,258: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
+2022-12-14 20:53:34,925: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:55:29,093: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
+2022-12-14 20:55:29,949: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:55:35,972: INFO: basehttp; "GET /articles/ HTTP/1.1" 200 5588
+2022-12-14 20:55:37,169: INFO: basehttp; "GET / HTTP/1.1" 200 5198
+2022-12-14 20:55:53,981: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
+2022-12-14 20:55:54,698: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:55:58,544: INFO: basehttp; "GET /articles/ HTTP/1.1" 200 5588
+2022-12-14 20:55:59,879: INFO: basehttp; "GET / HTTP/1.1" 200 5198
+2022-12-14 20:56:01,528: INFO: basehttp; "GET /articles/create/ HTTP/1.1" 302 0
+2022-12-14 20:56:01,545: INFO: basehttp; "GET /accounts/login/?next=/articles/create/ HTTP/1.1" 200 4069
+2022-12-14 20:56:02,928: INFO: basehttp; "GET /search/ HTTP/1.1" 200 5580
+2022-12-14 20:56:03,559: INFO: basehttp; "GET /articles/ HTTP/1.1" 200 5588
+2022-12-14 20:56:14,739: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:56:19,177: INFO: basehttp; "GET /articles/ HTTP/1.1" 200 5588
+2022-12-14 20:56:20,578: INFO: basehttp; "GET / HTTP/1.1" 200 5198
+2022-12-14 20:56:21,849: INFO: basehttp; "GET /news/82 HTTP/1.1" 200 2903
+2022-12-14 20:56:47,239: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
+2022-12-14 20:56:47,937: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:57:15,773: INFO: basehttp; "GET /articles/ HTTP/1.1" 200 5588
+2022-12-14 20:57:17,452: INFO: basehttp; "GET /articles/49 HTTP/1.1" 200 2914
+2022-12-14 20:57:19,112: INFO: basehttp; "GET /articles/ HTTP/1.1" 200 5588
+2022-12-14 20:57:20,334: INFO: basehttp; "GET /articles/40 HTTP/1.1" 200 2940
+2022-12-14 20:57:21,727: INFO: basehttp; "GET / HTTP/1.1" 200 5198
+2022-12-14 20:57:23,012: INFO: basehttp; "GET /articles/ HTTP/1.1" 200 5588
+2022-12-14 20:57:24,309: INFO: basehttp; "GET /articles/49 HTTP/1.1" 200 2914
+2022-12-14 20:57:27,501: WARNING: log; Not Found: /articles/4922
+2022-12-14 20:57:27,502: WARNING: basehttp; "GET /articles/4922 HTTP/1.1" 404 3771
+2022-12-14 20:58:16,494: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
+2022-12-14 20:58:17,268: INFO: autoreload; Watching for file changes with StatReloader
+2022-12-14 20:59:05,061: INFO: autoreload; C:\STUDY_P\news_portal\NewsPaper\NewsPaper\settings.py changed, reloading.
