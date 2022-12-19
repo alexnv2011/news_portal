@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category, Post, Author, Comment
+from modeltranslation.admin import TranslationAdmin # импортируем модель амдинки (вспоминаем модуль про переопределение стандартных админ-инструментов)
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -31,7 +32,24 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'user', 'rating']
 
 
+# Регистрируем модели для перевода в админке
+class CategoryAdmin1(TranslationAdmin):
+    model = Category
+
+
+class PostAdmin1(TranslationAdmin):
+    model = Post
+
+class CommentAdmin1(TranslationAdmin):
+    model = Comment
+
+
+# admin.site.register(Post)
+# admin.site.register(Category)
+# admin.site.register(Comment)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Comment, CommentAdmin)
+
+

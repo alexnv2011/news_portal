@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.i18n import i18n_patterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('i18n/', include('django.conf.urls.i18n')),    # подключаем встроенные эндопинты для работы с локализацией
     path('pages/', include('django.contrib.flatpages.urls')),
     # Делаем так, чтобы все адреса из нашего приложения (news/urls.py)
     # подключались к главному приложению с префиксом news/.
@@ -27,3 +29,8 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('accounts.urls')),
 ]
+
+# urlpatterns += i18n_patterns(
+#     path('', include('news.urls')),
+#     )
+

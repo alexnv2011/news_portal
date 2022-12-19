@@ -2,28 +2,31 @@
 {% extends 'flatpages/default.html' %}
 {% load custom_filters %}!
 {% load custom_tags %}
+{% load i18n %}
+{% load tz %}
 
 <!-- Название у нас  -->
-{% block title %}News{% endblock title %}
+{% block title %} {% trans "News" %} {% endblock title %}
 
 <!-- В контенте на странице мы выводим все -->
 
 {% block content %}
+
     {% if post_type == 'news' %}
-        <h1>Все новости</h1>
+        <h1>All news</h1>
     {% else %}
-        <h1>Все статьи</h1>
+        <h1>All articles</h1>
     {% endif %}
 
-<h4>Всего: {{ news|length }}</h4>
+<h4>{% trans "Total" %}: {{ news|length }}</h4>
 
    <hr>
    {% if news %}
        <table>
            <tr>
-               <td>Заголовок</td>
-               <td>Дата публикации</td>
-               <td>Текст</td>
+               <td>{% trans "Caption" %}</td>
+               <td>{% trans "Publication date" %}</td>
+               <td>{% trans "Text" %}</td>
            </tr>
            {% for new in news %}
            <tr>
@@ -36,7 +39,7 @@
 
        </table>
    {% else %}
-       <h2>Ничего нет!</h2>
+       <h2>{% trans "There is nothing" %}!</h2>
    {% endif %}
 
 
@@ -59,5 +62,25 @@
        {% endif %}
    {% endif %}
 
-<p><br>{% current_time %}</p>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    {% get_current_timezone as TIME_ZONE %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        <label for="timezone">Time zone:</label>
+        <select name="timezone">
+            {% for tz in timezones %}
+            <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected{% endif %}>{{ tz }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Set">
+    </form>
+
+
+<p>{{ TIME_ZONE }}</p>
+<p> {{ current_time|timezone:TIME_ZONE }}</p> <!-- Отображаем время в выбранном часовом поясе  -->
+
 {% endblock content %}

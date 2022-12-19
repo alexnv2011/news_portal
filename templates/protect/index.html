@@ -1,12 +1,12 @@
 {% extends "flatpages/default.html" %}
-
+{% load i18n %}
 {% block content %}
-<h2>Страница авторизованного пользователя {{request.user.username}}</h2>
-<div> Здесь может содержаться персональная информация для каждого пользователя </div>
+<h2>{% trans "Authorized user page" %} {{request.user.username}}</h2>
+<div>{% trans "Personal information for each user can be presented here" %} </div>
 
 {% if is_not_author %}
-<button> <a href="/accounts/upgrade/"> Хочу Стать Автором!</a> </button>
+<button> <a href="/accounts/upgrade/">{% trans "I want to be an Author" %}!</a> </button>
 {% endif %}
 
-<button> <a href="/accounts/logout/">Выйти</a> </button>
+<button> <a href="/accounts/logout/">{% trans "Logout" %}</a> </button>
 {% endblock %}

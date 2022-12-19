@@ -1,10 +1,10 @@
 {% extends 'flatpages/default.html' %}
-
+{% load i18n %}
 {% block content %}
     {% if post_type == 'news' %}
-        <h1>Создать новость</h1>
+        <h1>{% trans "Create news" %}</h1>
     {% else %}
-        <h1>Создать статью</h1>
+        <h1>{% trans "Create article" %}</h1>
     {% endif %}
 <hr>
 <form action="" method="post">

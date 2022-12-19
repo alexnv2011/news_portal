@@ -3,7 +3,9 @@ from django.urls import reverse
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.cache import cache
-
+from django.http import HttpResponse
+from django.utils.translation import gettext as _
+from django.utils.translation import pgettext_lazy  # импортируем «ленивый» геттекст с подсказкой
 
 news = 'NE'
 article = 'AR'
@@ -15,7 +17,7 @@ TYPES = [
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=True, help_text=_('category name'))
     subscribers = models.ManyToManyField(User, through='CategorySubscriber')
 
     @property
@@ -67,7 +69,7 @@ class Author(models.Model):
 
 
 class Post(models.Model):
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name=pgettext_lazy('author', 'author'),)
     post_type = models.TextField(max_length=2, choices=TYPES, default=news)
     time_create = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField(Category, through='PostCategory')

@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',     # обязательно впишите его перед админом
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,7 +49,6 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # ... include the providers you want to enable:
     'allauth.socialaccount.providers.google',
     'django_apscheduler',
 
@@ -66,9 +66,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
-
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'news.middlewares.TimezoneMiddleware',     # add timezone middleware!
 ]
 
 ROOT_URLCONF = 'NewsPaper.urls'
@@ -134,7 +134,12 @@ AUTHENTICATION_BACKENDS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
+
+LANGUAGES = [('en-us', 'English'),
+             ('ru', 'Русский')
+             ]
+
 
 TIME_ZONE = 'UTC'
 
@@ -308,4 +313,8 @@ LOGGING = {
     },
 }
 
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
 

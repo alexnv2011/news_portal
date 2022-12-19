@@ -14,9 +14,10 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from datetime import timedelta, datetime
 from .tasks import send_notify_email
 from django.core.cache import cache     # импортируем наш кэш
-
-
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from django.shortcuts import redirect
+import pytz  # импортируем стандартный модуль для работы с часовыми поясами
 
 @login_required
 def subscribe_me(request):  # add subscriber if not exists for category
@@ -38,8 +39,15 @@ class NewsList(ListView):
     paginate_by = 10
     #printer.apply_async([5], countdown=5)
     queryset = Post.objects.filter(post_type=news)   # фильтр - новости
-    extra_context = {'post_type': 'news'}
+    extra_context = {'post_type': 'news',
+                     'current_time': timezone.now(),
+                     'timezones': pytz.common_timezones
+                     }
 
+
+    def post(self, request):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('/')
 
 class NewsSearch(ListView):
     model = Post
@@ -47,6 +55,10 @@ class NewsSearch(ListView):
     template_name = 'posts_search.html'
     context_object_name = 'news'
     paginate_by = 10
+    extra_context = {
+                     'current_time': timezone.now(),
+                     'timezones': pytz.common_timezones
+                     }
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -62,7 +74,10 @@ class NewsDetail(DetailView):
     model = Post
     template_name = 'post_detail.html'
     context_object_name = 'new'
-    extra_context = {'post_type': 'news'}
+    extra_context = {'post_type': 'news',
+                     'current_time': timezone.now(),
+                     'timezones': pytz.common_timezones
+                     }
 
     def get_object(self, *args, **kwargs):  # переопределяем метод получения объекта, как ни странно
         obj = cache.get(f'news-{self.kwargs["pk"]}', None)  # кэш очень похож на словарь, и метод get действует так же.
@@ -80,7 +95,10 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'post_create.html'
-    extra_context = {'post_type': 'news'}
+    extra_context = {'post_type': 'news',
+                     'current_time': timezone.now(),
+                     'timezones': pytz.common_timezones
+                     }
     success_url = reverse_lazy('news')
 
     def form_valid(self, form):
@@ -151,7 +169,10 @@ class NewsEdit(PermissionRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
-    extra_context = {'post_type': 'news'}
+    extra_context = {'post_type': 'news',
+                     'current_time': timezone.now(),
+                     'timezones': pytz.common_timezones
+                     }
     success_url = reverse_lazy('news')
 
 
@@ -160,7 +181,10 @@ class NewsDelete(PermissionRequiredMixin, DeleteView):
     permission_required = ('news.delete_post')
     model = Post
     template_name = 'post_delete.html'
-    extra_context = {'post_type': 'news'}
+    extra_context = {'post_type': 'news',
+                     'current_time': timezone.now(),
+                     'timezones': pytz.common_timezones
+                     }
     success_url = reverse_lazy('news')
 
 
@@ -172,12 +196,22 @@ class ArticleList(ListView):
     context_object_name = 'news'
     paginate_by = 10
     queryset = Post.objects.filter(post_type=article)   # фильтр - статьи
-
+    extra_context = {'post_type': 'article',
+                     'current_time': timezone.now(),
+                     'timezones': pytz.common_timezones
+                     }
+    def post(self, request):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('/articles/')
 
 class ArticleDetail(DetailView):
     model = Post
     template_name = 'post_detail.html'
     context_object_name = 'new'
+    extra_context = {
+                     'current_time': timezone.now(),
+                     'timezones': pytz.common_timezones
+                     }
 
     def get_object(self, *args, **kwargs):  # переопределяем метод получения объекта, как ни странно
         obj = cache.get(f'articles-{self.kwargs["pk"]}', None)  # кэш очень похож на словарь, и метод get действует так же.
@@ -196,6 +230,10 @@ class ArticleCreate(PermissionRequiredMixin, CreateView):
     model = Post
     template_name = 'post_create.html'
     success_url = reverse_lazy('articles')
+    extra_context = {
+                     'current_time': timezone.now(),
+                     'timezones': pytz.common_timezones
+                     }
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type = article
@@ -246,6 +284,10 @@ class ArticleEdit(PermissionRequiredMixin, UpdateView):
     model = Post
     template_name = 'post_edit.html'
     success_url = reverse_lazy('articles')
+    extra_context = {
+                     'current_time': timezone.now(),
+                     'timezones': pytz.common_timezones
+                     }
 
 
 # Представление, удаляющее пост.
@@ -254,4 +296,9 @@ class ArticleDelete(PermissionRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('articles')
+    extra_context = {
+                     'current_time': timezone.now(),
+                     'timezones': pytz.common_timezones
+                     }
+
 

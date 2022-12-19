@@ -1,10 +1,11 @@
 <!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
+{% load i18n %}
 {% load custom_filters %}!
 {% load custom_tags %}
 
 <!-- Название у нас будет New -->
-{% block title %}New{% endblock title %}
+{% block title %}{% trans "New" %}{% endblock title %}
 
 <!-- В контенте на странице мы выводим сам пост, идентификатор которого был передан в url -->
 {% block content %}
@@ -14,16 +15,16 @@
        <table>
            {% for category in new.category.all %}
            <tr>
-               <td>Категория: </td>
+               <td>{% trans "Category" %}: </td>
                <td> {{  category.name  }} </td>
-               <td><a href="/subscribe/?cat_id={{ category.id }}"> Подписаться </a></td>
+               <td><a href="/subscribe/?cat_id={{ category.id }}">{% trans "Subscribe" %} </a></td>
            </tr>
            {% endfor %}
        </table>
 </p>
 
 
-<h6>Опубликовано: {{ new.time_create|date:'d.M.Y' }}</h6>
+<h6>{% trans "Published" %}: {{ new.time_create|date:'d.M.Y' }}</h6>
 <hr>
 <p>{{ new.text|censor }}</p>
 <p>{% current_time %}</p>
